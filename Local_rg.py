@@ -7,7 +7,7 @@
 #SBATCH --mem-per-cpu=20000
 
 ##GNOVA analysis
-cat /scratch/users/s/h/shifang/ldsc/data/xaa | while read PARAM
+cat /scratch/users/s/h/shifang/ldsc/data/ID | while read PARAM
 do
   # PARAM contains the expression values for this gene
   P1=$(echo "$PARAM" | awk '{ print $2 }')
@@ -28,7 +28,7 @@ do
 done
 
 ##Local Rg analysis
-input_file="/scratch/users/s/h/shifang/ldsc/data/xaa"
+input_file="/scratch/users/s/h/shifang/ldsc/data/ID1"
 bfile_prefix="/scratch/users/s/h/shifang/ldsc/SUPERGNOVA/example/eur_chr@_SNPmaf5"
 partition_prefix="/scratch/users/s/h/shifang/ldsc/SUPERGNOVA/partition/eur_chr@.bed"
 output_dir="/scratch/users/s/h/shifang/ldsc/SUPERGNOVA/results"
