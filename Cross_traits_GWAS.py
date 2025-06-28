@@ -20,16 +20,16 @@ done
 
 ##prepare the data for CPASSOC analysis
 while read -r PARAM; do
-  # 从一行中提取前两列
+  # 
   P1=$(echo "$PARAM" | awk '{ print $1 }')
   P2=$(echo "$PARAM" | awk '{ print $2 }')
 
   echo "Running Rscript for: $P1 $P2"
 
-  # 调用 R 脚本
+  # 
   Rscript --vanilla test.R10 "$P1.txt" "$P2"
 
-  # 假设输出是 123.txt
+  # 123.txt
   if [[ -f 123.txt ]]; then
     mv 123.txt "${P1}_${P2}.txt"
   else
@@ -58,20 +58,20 @@ write.table(data3, '123.txt', quote = FALSE,row.names = FALSE,sep="\t")
 
 ### CPASSOC with cross-trait statistical heterogeneity (SHet) analysis
 while read -r line; do
-  # 提取前两个字段
+  # 
   P1=$(echo "$line" | awk '{print $1}')
   P2=$(echo "$line" | awk '{print $2}')
   P3=$(echo "$line" | awk '{print $3}')
   P4=$(echo "$line" | awk '{print $5}')
-  # 构造输出文件名传给 R 脚本
+  # 
   fname="${P1}_${P2}.txt"
 
   echo "Running Rscript with: $fname $P1 $P2"
 
-  # 调用 R 脚本，生成 456.txt
+  #
   Rscript --vanilla test.R21 "$fname" "$P3" "$P4"
 
-  # 如果 R 脚本成功生成了 456.txt，就重命名
+  # 
   if [[ -f 456.txt ]]; then
     mv 456.txt "CAPSSOC_${P1}_${P2}.txt"
   else
