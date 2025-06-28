@@ -15,8 +15,8 @@ do
   P3=$(echo "$PARAM" | awk '{ print $5 }')
   ID=$(echo "$PARAM" | awk '{ print $1 }')
 
-  # 获取 P1 的文件名（去除路径，只保留 basename）
-  BASENAME=$(basename "$P1" .sumstats.gz)  # 去掉后缀.sumstats.gz
+  # 
+  BASENAME=$(basename "$P1" .sumstats.gz)  # 
 
   ./gnova.py \
     /scratch/users/s/h/shifang/ldsc/data/format/${ID}.txt.sumstats.gz \
@@ -41,7 +41,7 @@ while read -r line; do
 
     sumstats_file="/scratch/users/s/h/shifang/ldsc/data/format/${ID}.txt.sumstats.gz"
     ref_file="/scratch/users/s/h/shifang/ldsc/data/format/${P1}.sumstats.gz"
-    out_prefix="${output_dir}/${ID}_${P1}"  # 不加 .txt！
+    out_prefix="${output_dir}/${ID}_${P1}"  # 
 
     echo "Running SUPERGNOVA: ID=$ID, Trait=$P1, N1=$P2, N2=$P3"
 
