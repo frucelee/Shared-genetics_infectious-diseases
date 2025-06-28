@@ -7,7 +7,7 @@
 #SBATCH --mem-per-cpu=20000
 
 cat ID | while read PARAM; do
-    # 提取变量
+    # 
     P1=$(echo "$PARAM" | awk '{ print $1 }')
     P2=$(echo "$PARAM" | awk '{ print $3 }')
     P3=$(echo "$PARAM" | awk '{ print $5 }')
@@ -18,30 +18,30 @@ cat ID | while read PARAM; do
 
     OUT_PREFIX="${P1}_${P2}_${P3}_${P4}"
 
-    # 区间内提取SNP
+    # 
     awk -v p2="$P2" -v start="$P3" -v end="$P4" '$2 == p2 && $3 >= start && $3 <= end { print $1, $11 }' \
         /scratch/users/s/h/shifang/ldsc/data/used/$P1 > 456.txt
 
-    # 提取SNP列表
+    # 
     awk '{print $1}' 456.txt > SNP.txt
 
-    # LD计算
+    # LD
     plink -bfile /scratch/users/s/h/shifang/ldsc/MAGMA/g1000_eur \
           --keep-allele-order \
           --r square \
           --extract SNP.txt \
           --out sig_locus_mt
 
-    # 执行fine-mapping脚本
+    # fine-mapping
     Rscript --vanilla test.R2 "$P5"
 
-    # 替换PIP文件中的文本
+    # 
     sed -i "s/shifang/${OUT_PREFIX}/g" PIP_pip.csv
 
-    # 拷贝结果
+    # 
     cp PIP_pip.csv /scratch/users/s/h/shifang/ldsc/data/finemapping/${OUT_PREFIX}_pip.csv
 
-    # 清理中间文件
+    # 
     rm -f PIP_pip.csv 456.txt SNP.txt sig_locus_mt*
 done
 
@@ -71,7 +71,7 @@ fitted_rss = susie_rss(z = st$V2, R=ld, L=10, refine=F,n=N)
 #fitted_rss = susie_rss(bhat = st$V6, shat = st$V7, R=ld, L=10, refine=F,n=462933)
 Susiedf <- data.frame("pip" = fitted_rss$pip,  "CS" = NA)%>%
     rownames_to_column("SNP")%>%
-    separate(SNP, into =c("CHR","BP","REF","ALT","rsID"),remove = F) ##自行删除
+    separate(SNP, into =c("CHR","BP","REF","ALT","rsID"),remove = F) ##
   for (x in names(fitted_rss$sets$cs)){
     Susiedf$CS[fitted_rss$sets$cs[[x]]] <- x
   }
