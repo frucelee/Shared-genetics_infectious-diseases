@@ -36,7 +36,7 @@ while read -r PARAM; do
     echo "Warning: 123.txt not found after running for $P1 $P2"
   fi
 
-done < /scratch/users/s/h/shifang/ldsc/mtag/123.txt
+done < /scratch/users/s/h/shifang/ldsc/mtag/ID.txt
 
 >>>R
 ##pre_CPASSOC.R
@@ -78,6 +78,6 @@ while read -r line; do
     echo "Warning: 456.txt not found for ${P1} ${P2}"
   fi
 
-done < /scratch/users/s/h/shifang/ldsc/data/ID
+done < /scratch/users/s/h/shifang/ldsc/data/ID2
 
 
