@@ -7,7 +7,7 @@
 #SBATCH --mem-per-cpu=30000
 
 ##MTAG analysis
-cat /scratch/users/s/h/shifang/ldsc/mtag/123.txt | while read PARAM
+cat /scratch/users/s/h/shifang/ldsc/mtag/ID | while read PARAM
 do
 # PARAM contains the expression values for this gene
 P1=`echo $PARAM | awk '{ print $1 }'`
@@ -27,7 +27,7 @@ while read -r PARAM; do
   echo "Running Rscript for: $P1 $P2"
 
   # 
-  Rscript --vanilla test.R10 "$P1.txt" "$P2"
+  Rscript --vanilla pre_CPASSOC.R "$P1.txt" "$P2"
 
   # 123.txt
   if [[ -f 123.txt ]]; then
@@ -39,7 +39,7 @@ while read -r PARAM; do
 done < /scratch/users/s/h/shifang/ldsc/mtag/123.txt
 
 >>>R
-##test.R10
+##pre_CPASSOC.R
 library(data.table)
 library(dplyr)
 args <- commandArgs(trailingOnly=TRUE)
@@ -69,7 +69,7 @@ while read -r line; do
   echo "Running Rscript with: $fname $P1 $P2"
 
   #
-  Rscript --vanilla test.R21 "$fname" "$P3" "$P4"
+  Rscript --vanilla CPASSOC.R "$fname" "$P3" "$P4"
 
   # 
   if [[ -f 456.txt ]]; then
@@ -78,6 +78,6 @@ while read -r line; do
     echo "Warning: 456.txt not found for ${P1} ${P2}"
   fi
 
-done < /scratch/users/s/h/shifang/ldsc/data/xaa
+done < /scratch/users/s/h/shifang/ldsc/data/ID
 
 
