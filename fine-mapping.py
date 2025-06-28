@@ -33,7 +33,7 @@ cat ID | while read PARAM; do
           --out sig_locus_mt
 
     # fine-mapping
-    Rscript --vanilla test.R2 "$P5"
+    Rscript --vanilla susie.R "$P5"
 
     # 
     sed -i "s/shifang/${OUT_PREFIX}/g" PIP_pip.csv
@@ -46,7 +46,7 @@ cat ID | while read PARAM; do
 done
 
 >>>R
-##test.R2
+##susie.R
 library(susieR)
 library(data.table)
 library(magrittr) # needs to be run every time you start R and want to use %>%
@@ -68,7 +68,6 @@ colnames(ld)<-st$V1
 #z_scores = st$V6/st$V7
 #fitted_rss = susie_rss(z_scores, R=ld, L=10, refine=F)
 fitted_rss = susie_rss(z = st$V2, R=ld, L=10, refine=F,n=N)
-#fitted_rss = susie_rss(bhat = st$V6, shat = st$V7, R=ld, L=10, refine=F,n=462933)
 Susiedf <- data.frame("pip" = fitted_rss$pip,  "CS" = NA)%>%
     rownames_to_column("SNP")%>%
     separate(SNP, into =c("CHR","BP","REF","ALT","rsID"),remove = F) ##
