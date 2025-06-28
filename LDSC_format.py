@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=20000
 
-cat xaa | while read id
+cat ID | while read id
 do
 ##for LDSC analysis
 awk '{ print $1, $10, $11, $5, $4, $7}' ${id}>bbb_1
