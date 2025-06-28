@@ -7,10 +7,10 @@ data3<-fread(exp_path,header=T,sep="\t",check.names = FALSE)
 data3<-data3%>%distinct(snpid,.keep_all=T)
 data3<-data.frame(column_to_rownames(data3, var = "snpid"))
 CorrMatrix=cor(data3)
-# 提取两个参数
+# 
 P1 <- as.numeric(args[2])
 P2 <- as.numeric(args[3])
-# 打印成 SampleSize = c(..., ...)
+# 
 #cat(sprintf("SampleSize = c(%d, %d)\n", P1, P2))
 SampleSize <- c(P1, P2)
 cat(sprintf("SampleSize = c(%d, %d)\n", SampleSize[1], SampleSize[2]))
