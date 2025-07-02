@@ -80,4 +80,30 @@ while read -r line; do
 
 done < /scratch/users/s/h/shifang/ldsc/data/ID2
 
+#MAGMA analysis
+cat magma_ID | while read -r PARAM; do
+    P1=$(echo "$PARAM" | awk '{ print $1 }')  # trait name
+    P2=$(echo "$PARAM" | awk '{ print $2 }')  # sample size (N)
+    OUT_PREFIX="${P1}_${P2}"
+
+    INPUT_FILE="/scratch/users/s/h/shifang/ldsc/mtag/data/CPASSOC/CAPSSOC_${P1}.txt"
+    #awk  '$2>=0 && $2<=1' "$INPUT_FILE" > 123
+    #sed  -i '1i SNP P' 123
+
+    # 
+    if [[ ! -f "$INPUT_FILE" ]]; then
+        echo "Warning: File $INPUT_FILE does not exist. Skipping."
+        continue
+    fi
+
+    # MAGMA analysis
+    ./magma \
+        --bfile /scratch/users/s/h/shifang/ldsc/MAGMA/g1000_eur \
+        --pval "$INPUT_FILE" N=${P2} \
+        --gene-annot /scratch/users/s/h/shifang/ldsc/MAGMA/g1000_eur.genes.annot \
+        --out "SNP_${OUT_PREFIX}"
+
+    # 
+    rm -f output1.txt T123.* AD.txt
+done
 
