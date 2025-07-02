@@ -81,6 +81,9 @@ while read -r line; do
 done < /scratch/users/s/h/shifang/ldsc/data/ID2
 
 #MAGMA analysis
+##step 1
+./magma --annotate --snp-loc /scratch/users/s/h/shifang/ldsc/MAGMA/g1000_eur.bim --gene-loc NCBI37.3.gene.loc --out /scratch/users/s/h/shifang/ldsc/MAGMA/g1000_eur
+## step 2
 cat magma_ID | while read -r PARAM; do
     P1=$(echo "$PARAM" | awk '{ print $1 }')  # trait name
     P2=$(echo "$PARAM" | awk '{ print $2 }')  # sample size (N)
