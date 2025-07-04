@@ -110,3 +110,35 @@ cat magma_ID | while read -r PARAM; do
     rm -f output1.txt T123.* AD.txt
 done
 
+## extract sig genes
+for file in *.genes.out; do
+    echo "Processing $file..."
+    Rscript --vanilla sig_extract.R "$file"
+
+    prefix="${file%.genes.out}"
+    dest="/scratch/users/s/h/shifang/ldsc/MAGMA/sig/${prefix}.csv"
+
+    if [[ -f st.csv ]]; then
+        cp st.csv "$dest" && rm sig.csv
+    else
+        echo "Warning: sig.csv not found for $file"
+    fi
+done
+
+>>>R
+# sig_extract.R
+library(data.table)
+args <- commandArgs(trailingOnly=TRUE)
+exp_path <- args[1]
+st = read.table(exp_path, header=T)
+st$GENE<-factor(st$GENE)
+st1 = read.table("/scratch/users/s/h/shifang/ldsc/MAGMA/NCBI37.3.gene.loc", header=F)
+st1$V1<-factor(st1$V1)
+rownames(st)<-st$GENE
+rownames(st1)<-st1$V1
+st1<-st1[rownames(st),]
+st$gene<-st1$V6
+st$Bonfi <- p.adjust(st$P, method = "bonferroni",n=length(st$P))
+st$FDR<- p.adjust(st$P,method = "fdr")
+st<-subset(st,FDR<0.05)
+write.csv(st,"sig.csv",quote=F,row.names=F)
