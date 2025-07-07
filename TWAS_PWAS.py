@@ -48,23 +48,58 @@ done </scratch/users/s/h/shifang/TWAS/TWAS_model/model/raw/ID
 cat TWAS_config | while read id
 do
 tar -xzvf ${id}.tar.gz
-cd /scratch/users/s/h/shifang/TWAS/TWAS_model/model/${id}
-for f in *; do
-  if ! grep -qx "$f" /scratch/users/s/h/shifang/TWAS/TWAS_model/model/raw/keep.tmp; then
-    echo "Deleting $f"
-    rm "$f"
-  fi
-done
+
+grep -w -F -f /scratch/users/s/h/shifang/TWAS/TWAS_model/model/raw/ID ${id}.nofilter.pos |awk '{ print $3}' >${id}_123
+
+# 
+> ${id}_keep.tmp
+while read base; do
+  echo "${base}.hsq" >> ${id}_keep.tmp
+  echo "${base}.wgt.RDat" >> ${id}_keep.tmp
+done < ${id}_123   # 
+
+# 
+#for f in *; do
+#  if ! grep -qx "$f" ${id}_keep.tmp; then
+#    echo "Deleting $f"
+#    rm "$f"
+#  fi
+#done
+
+# 
+src_dir="${id}"
+dst_dir="${id}_selected"
+mkdir -p "$dst_dir"
+# 
+while read base; do
+  for ext in ".hsq" ".wgt.RDat"; do
+    file="${base}${ext}"
+    if [ -f "$src_dir/$file" ]; then
+      mv "$src_dir/$file" "$dst_dir/"
+      echo "Moved $file"
+    else
+      echo "Warning: $file not found in $src_dir"
+    fi
+  done
+done <"${id}_123"
+rm -r ${id}
+mv ${id}_selected ${id}
+rm ${id}_keep.tmp
 
 #awk 'NF==5 {print $0 "\tNA"}' ${id}.sumstats | awk 'NR==1{$6="CHISQ"} 1' > ${id}_output.txt
+grep -w -F -f ${id}_123 ${id}.pos > ${id}.pos_tmp
+mv ${id}.pos_tmp ${id}.pos
+sed  -i '1i PANEL WGT ID CHR P0 P1 N' ${id}.pos
+
 for i in {1..23}; do
 Rscript /scratch/users/s/h/shifang/TWAS/fusion_twas-master/FUSION.assoc_test.R \
 --sumstats /scratch/users/s/h/shifang/TWAS/TWAS_model/finngen_R12_AB1_INTESTINAL_INFECTIONS.txt \
---weights /scratch/users/s/h/shifang/TWAS/TWAS_model/model/GTExv8.EUR.${id}.pos \
+--weights /scratch/users/s/h/shifang/TWAS/TWAS_model/model/${id}.pos \
 --weights_dir /scratch/users/s/h/shifang/TWAS/TWAS_model/model \
---ref_ld_chr /scratch/users/s/h/shifang/TWAS/LDref/EUR/chr \
+--ref_ld_chr /scratch/users/s/h/shifang/TWAS/LDREF/1000G.EUR. \
 --chr ${i} \
---out /scratch/users/s/h/shifang/TWAS/TWAS_model/results/GCST90475667.h.tsv_${id}_${i}.dat
+--out /scratch/users/s/h/shifang/TWAS/TWAS_model/results/finngen_R12_AB1_INTESTINAL_INFECTIONS.txt_${id}_${i}.dat
+
 done
-rm -r ${id}*
+rm -r ${id}* ${id}_123 
 done
