@@ -102,4 +102,5 @@ Rscript /scratch/users/s/h/shifang/TWAS/fusion_twas-master/FUSION.assoc_test.R \
 
 done
 rm -r ${id}* ${id}_123 
+awk 'FNR==1 && NR!=1 {next} 1' /scratch/users/s/h/shifang/TWAS/TWAS_model/results/finngen_R12_AB1_INTESTINAL_INFECTIONS.txt_${id}* > /scratch/users/s/h/shifang/TWAS/TWAS_model/results/all/finngen_R12_AB1_INTESTINAL_INFECTIONS.txt_${id}.txt
 done
