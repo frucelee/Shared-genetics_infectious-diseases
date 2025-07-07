@@ -37,9 +37,25 @@ done
 
 ls *gz|awk '{print substr($0,1,length($0)-7)}' | sort | uniq > TWAS_config
 
+###only keep the risk genes
+> keep.tmp
+while read base; do
+  echo "${base}.hsq" >> keep.tmp
+  echo "${base}.wgt.RDat" >> keep.tmp
+done </scratch/users/s/h/shifang/TWAS/TWAS_model/model/raw/ID
+
+##Begin TWAS analysis
 cat TWAS_config | while read id
 do
 tar -xzvf ${id}.tar.gz
+cd /scratch/users/s/h/shifang/TWAS/TWAS_model/model/${id}
+for f in *; do
+  if ! grep -qx "$f" /scratch/users/s/h/shifang/TWAS/TWAS_model/model/raw/keep.tmp; then
+    echo "Deleting $f"
+    rm "$f"
+  fi
+done
+
 #awk 'NF==5 {print $0 "\tNA"}' ${id}.sumstats | awk 'NR==1{$6="CHISQ"} 1' > ${id}_output.txt
 for i in {1..23}; do
 Rscript /scratch/users/s/h/shifang/TWAS/fusion_twas-master/FUSION.assoc_test.R \
