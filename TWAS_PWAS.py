@@ -5,6 +5,23 @@
 #SBATCH --time=30:00:00
 #SBATCH --mem-per-cpu=40000
 
+#Build the model for plasma proteins
+cat PWAS_ID_build | while read PARAM
+do
+# PARAM contains the expression values for this gene
+GNAME=`echo $PARAM | awk '{ print $5 }'`
+CHR=`echo $PARAM | awk '{ print $2 }'`
+P0=`echo $PARAM | awk '{ p=$3 - 500e3; if(p<0) p=0; print p; }'`
+P1=`echo $PARAM | awk '{ print $3 + 500e3 }'`
+ID=`echo $PARAM | awk '{ print $1 }'`
+
+# Convert the expression matrix to a PLINK format phenotype
+plink --silent --bfile /globalscratch/users/s/h/shifang/eQTL/monkey/muscle_0yr --chr $CHR --from-bp $P0 --to-bp $P1 --make-bed --out OUT --pheno gene.txt --mpheno $ID --maf 0.0001 --allow-no-sex
+# Run FUSION
+Rscript FUSION.compute_weights.R --tmp /globalscratch/users/s/h/shifang/fusion/results/$GNAME.tmp --bfile OUT --PATH_plink /globalscratch/users/s/h/shifang/fusion/plink1.9/plink --out /globalscratch/users/s/h/shifang/fusion/results/$GNAME --verbose 0 --save_hsq  --models lasso,top1,enet --covar cov.txt --hsq_p 1.0 
+rm OUT.*
+done
+
 #PWAS analysis
 cat PWAS_ID | while read id
 do
