@@ -46,14 +46,14 @@ ID<-ID[data0$ID,]
 data0$base_pair_location<-ID$V4
 data0$SNP<-ID$V2
 data0$chromosome<-ID$V1
-# 2. 读取 1000 Genomes MAF 文件（SNP, A1, A2, MAF）
+# 2. 
 maf_table <- fread("/workdir/shifang/MR/merged.freq", header = TRUE)
-# 3. 合并：按 SNP 对应
+# 3. 
 merged <- merge(data0, maf_table, by = "SNP")
-# 4. 计算 EAF（effect_allele frequency）
-# 假设 maf_table 中的 A1/A2 是两个真实的等位基因（未注明哪个是 minor）
+# 4. EAF（effect_allele frequency）
+# 
 merged$EAF <- mapply(function(effect_allele, a1, a2, maf) {
-  # 判断哪个是 minor allele（假设字母靠前为 minor）
+  # 
   alleles <- sort(c(a1, a2))
   minor <- alleles[1]
   major <- alleles[2]
@@ -63,7 +63,7 @@ merged$EAF <- mapply(function(effect_allele, a1, a2, maf) {
   } else if (effect_allele == major) {
     return(1 - maf)
   } else {
-    return(NA)  # effect_allele 不在 A1/A2 中，返回 NA
+    return(NA)  # effect_allele 
   }
 }, merged$effect_allele, merged$A1, merged$A2, merged$MAF)
 data0<-merged
