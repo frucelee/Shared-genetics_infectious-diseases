@@ -1,1 +1,1 @@
-# Shared-genetics_infectious-diseases
+# Shared-genetics_noncommunicable and infectious-diseases
